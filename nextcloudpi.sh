@@ -105,6 +105,7 @@ EOF
 #!/bin/bash
 DIR=/usr/local/etc/nextcloudpi-config.d
 test -f $DIR/$1 || { echo "File not found"; exit 1; }
+[[ $1 != *"/"* ]] || { echo "Path forbidden!"; exit 2; }
 source /usr/local/etc/library.sh
 cd $DIR
 launch_script $1
