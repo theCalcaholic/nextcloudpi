@@ -15,7 +15,7 @@
 
 source ../library.sh
 
-loadconfig ./letsencrypt.conf
+load_config ./letsencrypt.conf
 
 declare -A DOMAIN_FIELD=([type]=url [name]=domain [value]=${CONFIG[domain]})
 declare -A EMAIL_FIELD=([type]=email [name]=email [value]=${CONFIG[email]})

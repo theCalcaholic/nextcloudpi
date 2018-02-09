@@ -128,6 +128,7 @@ function launch_script()
   )
 }
 
+
 # show an info box for a script if the INFO variable is set in the script
 function info_script()
 {
@@ -206,7 +207,7 @@ function form2json() {
   echo "$json"
 }
 
-function loadconfig() {
+function load_config() {
   declare -Ag CONFIG
   while IFS=':' read -r line
   do
@@ -221,7 +222,7 @@ function loadconfig() {
   declare -r CONFIG
 }
 
-function saveconfig() {
+function save_config() {
   declare -A values
   oldIFS=$IFS
   IFS=';'
