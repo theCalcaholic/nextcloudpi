@@ -13,8 +13,13 @@
 #
 # More at https://ownyourbits.com/2017/03/17/lets-encrypt-installer-for-apache/
 
-DOMAIN_=mycloud.ownyourbits.com
-EMAIL_=mycloud@ownyourbits.com
+source ../library.sh
+
+loadconfig ./letsencrypt.conf
+
+declare -A DOMAIN_FIELD=([type]=url [name]=domain [value]=${CONFIG[domain]})
+declare -A EMAIL_FIELD=([type]=email [name]=email [value]=${CONFIG[email]})
+declare -a FORM=(DOMAIN_FIELD EMAIL_FIELD)
 
 NCDIR=/var/www/nextcloud
 OCC="$NCDIR/occ"
@@ -65,13 +70,14 @@ EOF
 # tested with git version v0.11.0-71-g018a304
 configure() 
 {
-  local DOMAIN_LOWERCASE="${DOMAIN_,,}"
+  local DOMAIN=${CONFIG[domain]}
+  local DOMAIN_LOWERCASE="${DOMAIN,,}"
 
   grep -q ServerName $VHOSTCFG && \
-    sed -i "s|ServerName .*|ServerName $DOMAIN_|" $VHOSTCFG || \
-    sed -i "/DocumentRoot/aServerName $DOMAIN_" $VHOSTCFG 
+    sed -i "s|ServerName .*|ServerName $DOMAIN|" $VHOSTCFG || \
+    sed -i "/DocumentRoot/aServerName $DOMAIN" $VHOSTCFG 
 
-  /etc/letsencrypt/letsencrypt-auto certonly -n --no-self-upgrade --webroot -w $NCDIR --hsts --agree-tos -m $EMAIL_ -d $DOMAIN_ && {
+  /etc/letsencrypt/letsencrypt-auto certonly -n --no-self-upgrade --webroot -w $NCDIR --hsts --agree-tos -m $EMAIL_ -d $DOMAIN && {
     cat > /etc/cron.weekly/letsencrypt-ncp <<EOF
 #!/bin/bash
 /etc/letsencrypt/certbot-auto renew --quiet
@@ -84,8 +90,8 @@ EOF
     sed -i "s|SSLCertificateFile.*|SSLCertificateFile /etc/letsencrypt/live/$DOMAIN_LOWERCASE/fullchain.pem|" $VHOSTCFG2
     sed -i "s|SSLCertificateKeyFile.*|SSLCertificateKeyFile /etc/letsencrypt/live/$DOMAIN_LOWERCASE/privkey.pem|" $VHOSTCFG2
 
-    sudo -u www-data php $OCC config:system:set trusted_domains 4 --value=$DOMAIN_
-    sudo -u www-data php $OCC config:system:set overwrite.cli.url --value=https://$DOMAIN_
+    sudo -u www-data php $OCC config:system:set trusted_domains 4 --value=$DOMAIN
+    sudo -u www-data php $OCC config:system:set overwrite.cli.url --value=https://$DOMAIN
 
     # delayed in bg so it does not kill the connection, and we get AJAX response
     bash -c "sleep 2 && service apache2 reload" &>/dev/null &

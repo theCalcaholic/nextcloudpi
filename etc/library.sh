@@ -186,6 +186,82 @@ function persistent_cfg()
   ln -s "$DST" "$SRC"
 }
 
+function form2json() {
+  declare -a attributes="(type name value options checked)"
+  json="{"
+  for field in "${FORM[@]}"
+  do
+    json="$json { "
+    for key in "${attributes[@]}"
+    do
+      if [ "$key" != "value" -o "${field[type]}" != "password" ]
+      then
+        attribute=$field[$key]
+        json="$json \"$key\": \"${!attribute}\", "
+      fi
+    done
+    json="$json },"
+  done
+  json="$json }"
+  echo "$json"
+}
+
+function loadconfig() {
+  declare -Ag CONFIG
+  while IFS=':' read -r line
+  do
+    key="${line%%:*}"
+    value="${line#*:}"
+    key="${key## }"
+    value="${value## }"
+    key="${key%% }"
+    value="${value%% }"
+    CONFIG[$key]="$value"
+  done < "$1"
+  declare -r CONFIG
+}
+
+function saveconfig() {
+  declare -A values
+  oldIFS=$IFS
+  IFS=';'
+  for entry in $2
+  do
+    local key="${entry%%:*}"
+    local value="${entry#*:}"
+    key="${key## }"
+    key="${key%% }"
+    value="${value## }"
+    value="${value%% }"
+    values[$key]=$value
+  done
+  IFS=$oldIFS
+  local newconfig=""
+
+  while IFS=':' read -r line
+  do
+    key="${line%%:*}"
+    key="${key## }"
+    key="${key%% }"
+    accesskey="values[$key]"
+    if [ ${!accesskey+_} ]
+    then
+      newconfig="$newconfig$key: ${!accesskey}\n"
+      unset "values[$key]"
+    else
+      newconfig="$newconfig$line\n"
+    fi
+  done < "$1"
+  
+  for key in ${!values[@]}
+  do
+    accesskey=values[$key]
+    newconfig="$newconfig$key: ${!accesskey}\n"
+  done
+
+  printf "$newconfig" > "$1"
+}
+
 # License
 #
 # This script is free software; you can redistribute it and/or modify it
