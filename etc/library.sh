@@ -187,18 +187,20 @@ function persistent_cfg()
   ln -s "$DST" "$SRC"
 }
 
-function form2json() {
+function form2json()
+{
   declare -a attributes="(type name value options checked)"
   json="{"
-  for field in "${FORM[@]}"
+  for fieldname in "${FORM[@]}"
   do
     json="$json { "
     for key in "${attributes[@]}"
     do
-      if [ "$key" != "value" -o "${field[type]}" != "password" ]
+      if [ "$key" == "value" -a "`array_get $fieldname type`" == "password" ]
       then
-        attribute=$field[$key]
-        json="$json \"$key\": \"${!attribute}\", "
+        json="$json \"$key\": \"\", "
+      else
+        json="$json \"$key\": \"$(array_get $fieldname $key)\", "
       fi
     done
     json="$json },"
@@ -261,6 +263,13 @@ function save_config() {
   done
 
   printf "$newconfig" > "$1"
+}
+
+function array_get() {
+  local ar_name="$1"
+  tmp="$ar_name[$2]"
+  echo "${!tmp}"
+
 }
 
 # License
