@@ -14,12 +14,7 @@
 # More at https://ownyourbits.com/2017/03/17/lets-encrypt-installer-for-apache/
 
 source ../library.sh
-
-load_config ./letsencrypt.conf
-
-declare -A DOMAIN_FIELD=([type]=url [name]=domain [value]=${CONFIG[domain]})
-declare -A EMAIL_FIELD=([type]=email [name]=email [value]=${CONFIG[email]})
-declare -a FORM=(DOMAIN_FIELD EMAIL_FIELD)
+source ./letsencrypt.form
 
 NCDIR=/var/www/nextcloud
 OCC="$NCDIR/occ"
