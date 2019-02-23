@@ -184,7 +184,8 @@ EOF
   </VirtualHost>
   <Directory /var/www/nextcloud/>
     Options +FollowSymlinks
-    AllowOverride All
+    AllowOverride None
+    Include /var/www/nextcloud/.htaccess
     <IfModule mod_dav.c>
       Dav off
     </IfModule>

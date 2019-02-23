@@ -1,7 +1,9 @@
 
-[v1.8.3](https://github.com/nextcloud/nextcloudpi/commit/978fb73) (2019-02-23) nc-nextcloud: disable .user.ini
+[v1.8.4](https://github.com/nextcloud/nextcloudpi/commit/c3a1c8c) (2019-02-23) nc-nextcloud: disable .htaccess
 
-[v1.8.2](https://github.com/nextcloud/nextcloudpi/commit/1dfa11a) (2019-02-23) nc-limits: autocalculate database memory
+[v1.8.3](https://github.com/nextcloud/nextcloudpi/commit/b2f38db) (2019-02-23) nc-nextcloud: disable .user.ini
+
+[v1.8.2  ](https://github.com/nextcloud/nextcloudpi/commit/1dfa11a) (2019-02-23) nc-limits: autocalculate database memory
 
 [v1.8.1  ](https://github.com/nextcloud/nextcloudpi/commit/2a0dc38) (2019-02-22) lamp: adjust mariadb parameters
 
