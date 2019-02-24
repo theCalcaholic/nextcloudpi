@@ -45,7 +45,7 @@
     header('Expires: -1');
 
     // HTTP2 push headers
-    header("Link: </js/minified.js>; rel=preload; as=script;,</js/ncp.js>; rel=preload; as=script;,</css/ncp.css>; rel=preload; as=style;,</img/ncp-logo.svg>; rel=preload; as=image;, </img/loading-small.gif>; rel=preload; as=image;, rel=preconnect href=ncp-launcher.php;");
+    header("Link: </css/ncp.css>; rel=preload; as=style;,</img/ncp-logo.svg>; rel=preload; as=image;, </img/loading-small.gif>; rel=preload; as=image;, rel=preconnect href=ncp-launcher.php;", false);
 
   ?>
     <link rel="icon" type="image/png" href="img/favicon.png"/>
@@ -192,28 +192,28 @@ HTML;
 	<div id="content" class="app-files" role="main">
         <div id='overlay' class="hidden"></div>
 		<div id="app-navigation">
-        	<div id="ncp-options">
+        	<ul id="ncp-options">
               <?php echo print_sidebar($l, false); ?>
-            </div>
-          </div>
+          </ul>
+    </div>
 
-      <div id="app-content">
-        <div id="app-navigation-toggle" class="icon-menu hidden"></div>
+    <div id="app-content">
+      <div id="app-navigation-toggle" class="icon-menu hidden"></div>
 
-        <div id="config-wrapper">
-          <?php echo print_config_forms($l); ?>
-        </div>
+      <div id="config-wrapper">
+        <?php echo print_config_forms($l); ?>
+      </div>
 
-        <div id="dashboard-wrapper" class="content-box <?php if(array_key_exists('app',$_GET) && ($_GET['app'] != 'dashboard')) echo 'hidden';?>">
-          <h2 class="text-title"><?php echo $l->__("System Info"); ?></h2>
-          <div id="dashboard-suggestions" class="table-wrapper"></div>
-          <div id="dashboard-table" class="outputbox table-wrapper"></div>
-          <div id="loading-info-gif"> <img src="img/loading-small.gif"> </div>
-        </div>
+      <div id="dashboard-wrapper" class="content-box <?php if(array_key_exists('app',$_GET) && ($_GET['app'] != 'dashboard')) echo 'hidden';?>">
+        <h2 class="text-title"><?php echo $l->__("System Info"); ?></h2>
+        <div id="dashboard-suggestions" class="table-wrapper"></div>
+        <div id="dashboard-table" class="outputbox table-wrapper"></div>
+        <div id="loading-info-gif"> <img src="img/loading-small.gif"> </div>
+      </div>
 
-        <div id="nc-config-wrapper" class="content-box <?php if($_GET['app'] != 'config') echo 'hidden';?>">
-          <h2 class="text-title"><?php echo $l->__("Nextcloud configuration"); ?></h2>
-          <div id="nc-config-box" class="table-wrapper">
+      <div id="nc-config-wrapper" class="content-box <?php if($_GET['app'] != 'config') echo 'hidden';?>">
+        <h2 class="text-title"><?php echo $l->__("Nextcloud configuration"); ?></h2>
+        <div id="nc-config-box" class="table-wrapper">
 <?php
   // print Nextcloud config table
   include( '/var/www/nextcloud/config/config.php' );
@@ -255,8 +255,7 @@ HTML;
     echo '<input type="hidden" id="csrf-token-ui"  name="csrf-token-ui"  value="' . getCSRFToken() . '"/>';
     echo '<input type="hidden" id="csrf-token-cfg" name="csrf-token-cfg" value="' . getCSRFToken() . '"/>';
   ?>
-    <script src="js/minified.js"></script>
-    <script src="js/ncp.js"></script>
+    <script type="module" rel="modulepreload"   src="js/ncp.js"></script>
 </body>
 </html>
 
