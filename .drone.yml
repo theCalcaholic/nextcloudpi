@@ -18,10 +18,10 @@ steps:
               - donotuse
               - x86
           build_args:
-              - release='buster'
-              - version='99.0.0'
-              - arch='amd64'
-              - 'arch_qemu'='x86_64'
+              - release=buster
+              - version=99.0.0
+              - arch=amd64
+              - 'arch_qemu'=x86_64
           dockerfile: docker/debian-ncp/Dockerfile
     trigger:
         branch:
