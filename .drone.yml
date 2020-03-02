@@ -7,10 +7,10 @@ steps:
 - name: prepare-docker
   image: alpine:latest
   commands:
-      - apk update && apk add bash jq
+      - 'apk update && apk add bash jq'
       - 'version="$(git describe --tags --always)"'
       - 'version="${version%-*-*}"'
-      - echo "Found version: ${version}"
+      - 'echo "Found version: ${version}"'
       - 'echo "$version" >> .tags'
 
 - name: build-docker-adm64
