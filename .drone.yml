@@ -7,7 +7,7 @@ steps:
 - name: prepare-docker
   image: alpine:latest
   commands:
-      - 'apk update && apk add bash jq'
+      - 'apk update && apk add bash jq git'
       - 'version="$(git describe --tags --always)"'
       - 'version="${version%-*-*}"'
       - 'echo "Found version: ${version}"'
