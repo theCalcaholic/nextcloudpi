@@ -11,7 +11,7 @@ steps:
           from_secret: DOCKER_LOGIN
       password:
           from_secret: DOCKER_PW
-      repo: github.com/thecalcaholic/nextcloudpi
+      repo: thecalcaholic/ncp-fork
       tags:
       - latest
       - test
