@@ -4,7 +4,16 @@ type: docker
 name: default
 
 steps:
-- name: build-docker
+- name: prepare-docker
+  image: alpine:latest
+  commands:
+      - apk update && apk add bash jq
+      - version="$(git describe --tags --always)"
+      - version="${version%-*-*}"
+      - echo "Found version: ${version}"
+      - echo "$version" >> .tags
+
+- name: build-docker-adm64
   image: plugins/docker
   settings:
       username:
@@ -18,8 +27,7 @@ steps:
       - donotuse
       - x86
       build_args:
-      - 'release=buster'
-      - 'version=99.0.0'
+      - "release=$(jq -r .release < etc/ncp.cfg)"
       - 'arch=amd64'
       - 'arch_qemu=x86_64'
       dockerfile: docker/debian-ncp/Dockerfile
