@@ -4,28 +4,28 @@ type: docker
 name: default
 
 steps:
-    - name: build-docker
-      image: plugins/docker
-      settings:
-          username:
-              from_secret: DOCKER_LOGIN
-          password:
-              from_secret: DOCKER_PW
-          repo: github.com/thecalcaholic/nextcloudpi
-          tags:
-          - latest
-          - test
-          - donotuse
-          - x86
-          build_args:
-          - release=buster
-          - version='99.0.0'
-          - arch=amd64
-          - 'arch_qemu'=x86_64
-          dockerfile: docker/debian-ncp/Dockerfile
-    trigger:
-        branch:
-        - master
-        - devel
-        - feature/**
+- name: build-docker
+  image: plugins/docker
+  settings:
+      username:
+          from_secret: DOCKER_LOGIN
+      password:
+          from_secret: DOCKER_PW
+      repo: github.com/thecalcaholic/nextcloudpi
+      tags:
+      - latest
+      - test
+      - donotuse
+      - x86
+      build_args:
+      - release=buster
+      - version='99.0.0'
+      - arch=amd64
+      - 'arch_qemu'=x86_64
+      dockerfile: docker/debian-ncp/Dockerfile
+trigger:
+    branch:
+    - master
+    - devel
+    - feature/**
 ...
