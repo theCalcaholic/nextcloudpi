@@ -8,8 +8,8 @@ steps:
   image: alpine:latest
   commands:
       - apk update && apk add bash jq
-      - version="$(git describe --tags --always)"
-      - version="${version%-*-*}"
+      - 'version="$(git describe --tags --always)"'
+      - 'version="${version%-*-*}"'
       - echo "Found version: ${version}"
       - 'echo "$version" >> .tags'
 
