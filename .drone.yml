@@ -11,7 +11,7 @@ steps:
       - 'version="$(git describe --tags --always)"'
       - 'version="${version%-*-*}"'
       - 'echo "Found version: ${version}"'
-      - 'echo "$version" >> .tags'
+      - '[[ -n "$version" ]] && echo "$version" >> .tags'
 
 - name: build-docker-adm64
   image: plugins/docker
@@ -27,7 +27,7 @@ steps:
       - donotuse
       - x86
       build_args:
-      - "release=$(jq -r .release < etc/ncp.cfg)"
+      - "release=buster"
       - 'arch=amd64'
       - 'arch_qemu=x86_64'
       dockerfile: docker/debian-ncp/Dockerfile
