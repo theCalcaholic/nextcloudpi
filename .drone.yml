@@ -11,7 +11,7 @@ steps:
       - version="$(git describe --tags --always)"
       - version="${version%-*-*}"
       - echo "Found version: ${version}"
-      - echo "$version" >> .tags
+      - 'echo "$version" >> .tags'
 
 - name: build-docker-adm64
   image: plugins/docker
