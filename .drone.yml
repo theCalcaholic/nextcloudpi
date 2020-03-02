@@ -3,6 +3,15 @@ kind: pipeline
 type: docker
 name: default
 
+.docker_build_settings_template: &docker_build_settings_template
+    username:
+        from_secret: DOCKER_LOGIN
+    password:
+        from_secret: DOCKER_PW
+    repo: thecalcaholic/ncp-fork
+
+
+
 steps:
 - name: prepare-docker
   image: alpine:latest
@@ -13,14 +22,10 @@ steps:
       - 'echo "Found version: ${version}"'
       - '[[ -z "$version" ]] || echo "$version" >> .tags'
 
-- name: build-docker-adm64
+- name: build-docker-amd64
   image: plugins/docker
   settings:
-      username:
-          from_secret: DOCKER_LOGIN
-      password:
-          from_secret: DOCKER_PW
-      repo: thecalcaholic/ncp-fork
+      << : *docker_build_settings_template
       tags:
       - latest
       - test
@@ -31,6 +36,8 @@ steps:
       - 'arch=amd64'
       - 'arch_qemu=x86_64'
       dockerfile: docker/debian-ncp/Dockerfile
+  depends_on:
+      - prepare-docker
 trigger:
     branch:
     - master
