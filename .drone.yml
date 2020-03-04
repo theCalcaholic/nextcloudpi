@@ -13,15 +13,12 @@ name: default
 .docker_build_commands: &docker_build_commands
   commands:
     #  - /usr/local/bin/dockerd-entrypoint.sh /bin/drone-docker &
+    - env
+    - uname -a
+    - lsb_release -a
     - export VERSION="$(git describe --tags --always)"
     - export VERSION="${VERSION%-*-*}"
     - export RELEASE="$(jq -r .release < etc/ncp.cfg)"
-    - echo "TAGS= ${PLUGIN_TAGS}"
-    - echo "TAG= ${PLUGIN_TAG}"
-    - echo "TAGS (file)= $([ ! -f '.tags' ] || cat .tags)"
-    - echo "REPO= ${PLUGIN_REPO}"
-    - echo "DAEMON OFF? ${PLUGIN_DAEMON_OFF}"
-    - echo "BUILD ARGS= ${PLUGIN_BUILD_ARGS}"
     #  - DOCKER_BUILDKIT=1 docker build --progress=plain . -f "${DOCKERFILE}" -t "${REPO}:latest" --pull --build_arg arch="${ARCH}" --build_arg arch_qemu="${QEMU_ARCH}"
     #  - '[[ -z "$VERSION" ]] || docker tag "${REPO}:latest" "${REPO}:${VERSION}"'
     #  - docker tag "${REPO}:latest" "${REPO}:donotuse"
