@@ -3,13 +3,6 @@ kind: pipeline
 type: docker
 name: default
 
-.docker_build_settings_template: &docker_build_settings_template
-    username:
-        from_secret: DOCKER_LOGIN
-    password:
-        from_secret: DOCKER_PW
-    repo: thecalcaholic/ncp-fork
-
 .docker_build_commands: &docker_build_commands
   commands:
     #  - /usr/local/bin/dockerd-entrypoint.sh /bin/drone-docker &
@@ -21,7 +14,7 @@ name: default
     - export VERSION="${VERSION%-*-*}"
     - export RELEASE="$(jq -r .release < etc/ncp.cfg)"
     - export DOCKER_BUILDKIT=1
-    - dockerd-entrypoint.sh docker build --progress=plain . -f "${DOCKERFILE}" -t "${REPO}:latest" --pull --build_arg arch="${ARCH}" --build_arg arch_qemu="${QEMU_ARCH}"
+    - dockerd-entrypoint.sh docker build --progress=plain . -f "${DOCKERFILE}" -t "${REPO}:latest" --pull --build_arg arch="${ARCH}" --build_arg arch_qemu="${QEMU_ARCH}" --build_arg release="${RELEASE}"
     #  - '[[ -z "$VERSION" ]] || docker tag "${REPO}:latest" "${REPO}:${VERSION}"'
     #  - docker tag "${REPO}:latest" "${REPO}:donotuse"
 
@@ -37,18 +30,18 @@ steps:
 
 - name: build-docker-amd64
   image: plugins/docker
-  settings:
-      << : *docker_build_settings_template
-      tags:
-      - latest
-      - test
-      - donotuse
-      - x86
-      build_args:
-      - "release=buster"
-      - 'arch=amd64'
-      - 'arch_qemu=x86_64'
-      dockerfile: docker/debian-ncp/Dockerfile
+  environment:
+    ARCH: "amd64"
+    ARCH_QEMU: "x86_64"
+    DOCKERFILE: "docker/debian-ncp/Dockerfile"
+    REPO: "thecalcaholic/ncp-fork"
+    DOCKER_PW:
+      from_secret: DOCKER_PW
+    DOCKER_LOGIN:
+      from_secret: DOCKER_LOGIN
+    TAG:
+      x86
+    RELEASE: buster
 #  depends_on:
 #      - prepare-docker
   << : *docker_build_commands
