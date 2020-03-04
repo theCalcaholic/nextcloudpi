@@ -47,8 +47,8 @@ steps:
       - 'arch=amd64'
       - 'arch_qemu=x86_64'
       dockerfile: docker/debian-ncp/Dockerfile
-  depends_on:
-      - prepare-docker
+#  depends_on:
+#      - prepare-docker
   << : *docker_build_commands
 
 trigger:
