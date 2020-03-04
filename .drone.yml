@@ -14,7 +14,7 @@ name: default
   commands:
     #  - /usr/local/bin/dockerd-entrypoint.sh /bin/drone-docker &
     - env
-    - apt-get install -y git jq
+    - apk add git jq
     - echo "user=$PLUGIN_USERNAME"
     - export VERSION="$(git describe --tags --always)"
     - export VERSION="${VERSION%-*-*}"
@@ -24,14 +24,14 @@ name: default
     #  - docker tag "${REPO}:latest" "${REPO}:donotuse"
 
 steps:
-- name: prepare-docker
-  image: alpine:latest
-  commands:
-      - 'apk update && apk add bash jq git'
-      - 'version="$(git describe --tags --always)"'
-      - 'version="${version%-*-*}"'
-      - 'echo "Found version: ${version}"'
-      - '[[ -z "$version" ]] || echo "$version" >> .tags'
+#- name: prepare-docker
+#  image: alpine:latest
+#  commands:
+#      - 'apk update && apk add bash jq git'
+#      - 'version="$(git describe --tags --always)"'
+#      - 'version="${version%-*-*}"'
+#      - 'echo "Found version: ${version}"'
+#      - '[[ -z "$version" ]] || echo "$version" >> .tags'
 
 - name: build-docker-amd64
   image: plugins/docker
