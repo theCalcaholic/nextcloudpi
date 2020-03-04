@@ -14,8 +14,8 @@ name: default
   commands:
     #  - /usr/local/bin/dockerd-entrypoint.sh /bin/drone-docker &
     - env
-    - uname -a
-    - lsb_release -a
+    - apt install -y git jq
+    - echo "user=$PLUGIN_USERNAME"
     - export VERSION="$(git describe --tags --always)"
     - export VERSION="${VERSION%-*-*}"
     - export RELEASE="$(jq -r .release < etc/ncp.cfg)"
