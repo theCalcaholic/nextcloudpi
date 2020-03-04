@@ -3,12 +3,12 @@ kind: pipeline
 type: docker
 name: default
 
-.docker_build_env_template: &docker_build_env_template
-    DOCKER_LOGIN:
+.docker_build_settings_template: &docker_build_settings_template
+    username:
         from_secret: DOCKER_LOGIN
-    DOCKER_PW:
+    password:
         from_secret: DOCKER_PW
-    REPO: thecalcaholic/ncp-fork
+    repo: thecalcaholic/ncp-fork
 
 .docker_build_commands: &docker_build_commands
 - export VERSION="$(git describe --tags --always)"
@@ -19,13 +19,31 @@ name: default
 - docker tag "${REPO}:latest" "${REPO}:donotuse"
     
 steps:
-- name: build-docker-amd64
-  image: docker:dind
-  environment:
-      << : *docker_build_env_template
-      ARCH: x86
-      QEMU_ARCH: x86_64
+- name: prepare-docker
+  image: alpine:latest
+  commands:
+      - 'apk update && apk add bash jq git'
+      - 'version="$(git describe --tags --always)"'
+      - 'version="${version%-*-*}"'
+      - 'echo "Found version: ${version}"'
+      - '[[ -z "$version" ]] || echo "$version" >> .tags'
 
+- name: build-docker-amd64
+  image: plugins/docker
+  settings:
+      << : *docker_build_settings_template
+      tags:
+      - latest
+      - test
+      - donotuse
+      - x86
+      build_args:
+      - "release=buster"
+      - 'arch=amd64'
+      - 'arch_qemu=x86_64'
+      dockerfile: docker/debian-ncp/Dockerfile
+  depends_on:
+      - prepare-docker
 trigger:
     branch:
     - master
