@@ -23,7 +23,7 @@ name: default
         echo "${RELEASE}"
         echo "${QEMU_ARCH}"
         #dockerd-entrypoint.sh docker build --progress=plain . -f "$DOCKERFILE" -t "$REPO:latest" --pull --build-arg arch="$ARCH" --build-arg arch_qemu="$QEMU_ARCH" --build-arg release="$RELEASE"
-        dockerd-entrypoint.sh /bin/drone-docker --help
+        dockerd-entrypoint.sh /bin/drone-docker help
       EOF
     #  - '[[ -z "$VERSION" ]] || docker tag "${REPO}:latest" "${REPO}:${VERSION}"'
     #  - docker tag "${REPO}:latest" "${REPO}:donotuse"
