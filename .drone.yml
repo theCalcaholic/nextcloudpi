@@ -9,6 +9,7 @@ name: default
     password:
         from_secret: DOCKER_PW
     repo: thecalcaholic/ncp-fork
+    dockerfile: docker/debian-ncp/Dockerfile
 
 
 
@@ -17,9 +18,9 @@ steps:
   image: alpine:latest
   commands:
       - 'apk update && apk add bash jq git'
-      - 'version="$(git describe --tags --always)"'
-      - 'version="${version%-*-*}"'
-      - 'echo "Found version: ${version}"'
+      - 'export version="$(git describe --tags --always)"'
+      - 'version="$(bash -c "echo ${version%-*-*}")"'
+      - 'echo "Found version: $version"'
       - '[[ -z "$version" ]] || echo "$version" >> .tags'
 
 - name: build-docker-amd64
@@ -35,9 +36,8 @@ steps:
       - "release=buster"
       - 'arch=amd64'
       - 'arch_qemu=x86_64'
-      dockerfile: docker/debian-ncp/Dockerfile
   depends_on:
-      - prepare-docker
+    - prepare-docker
 trigger:
     branch:
     - master
