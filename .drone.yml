@@ -7,6 +7,7 @@ name: default
   commands:
     #  - /usr/local/bin/dockerd-entrypoint.sh /bin/drone-docker &
     - env
+    - echo "${REPO}"
     - apk add git jq
     - echo "user=$PLUGIN_USERNAME"
     - git fetch --tags
@@ -14,7 +15,7 @@ name: default
     - export VERSION="${VERSION%-*-*}"
     - export RELEASE="$(jq -r .release < etc/ncp.cfg)"
     - export DOCKER_BUILDKIT=1
-    - echo "${REPO}"
+    - echo "${REPO}"; printenv REPO
     - echo "${ARCH}"
     - echo "${DOCKERFILE}"
     - echo "${RELEASE}"
