@@ -12,14 +12,12 @@ name: default
     dockerfile: docker/debian-ncp/Dockerfile
 
 
-
 steps:
 - name: prepare-docker
   image: alpine:latest
   commands:
       - 'apk update && apk add bash jq git'
-      - 'export version="$(git describe --tags --always)"'
-      - 'version="$(bash -c "echo ${version%-*-*}")"'
+      - 'version="$(bash -c "version="$(git describe --tags --always)" && echo ${version%-*-*}")"'
       - 'echo "Found version: $version"'
       - '[[ -z "$version" ]] || echo "$version" >> .tags'
 
@@ -38,6 +36,39 @@ steps:
       - 'arch_qemu=x86_64'
   depends_on:
     - prepare-docker
+
+- name: build-docker-armhf
+  image: plugins/docker
+  settings:
+    << : *docker_build_settings_template
+    tags:
+      - latest
+      - test
+      - donotuse
+      - armhf
+    build_args:
+      - "release=buster"
+      - 'arch=arm32v7'
+      - 'arch_qemu=arm'
+  depends_on:
+    - prepare-docker
+
+- name: build-docker-arm64
+  image: plugins/docker
+  settings:
+    << : *docker_build_settings_template
+    tags:
+      - latest
+      - test
+      - donotuse
+      - arm64
+    build_args:
+      - "release=buster"
+      - 'arch=arm64v8'
+      - 'arch_qemu=aarch64'
+  depends_on:
+    - prepare-docker
+
 trigger:
     branch:
     - master
