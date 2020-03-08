@@ -7,10 +7,10 @@ name: default
   commands:
     #  - /usr/local/bin/dockerd-entrypoint.sh /bin/drone-docker &
     - env
+    - apk add git jq bash
     - |
       bash -c <<-EOF
         echo "${REPO}"
-        apk add git jq
         echo "user=$PLUGIN_USERNAME"
         git fetch --tags
         export VERSION="$(git describe --tags --always)"
