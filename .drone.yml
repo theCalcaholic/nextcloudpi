@@ -7,20 +7,23 @@ name: default
   commands:
     #  - /usr/local/bin/dockerd-entrypoint.sh /bin/drone-docker &
     - env
-    - echo "${REPO}"
-    - apk add git jq
-    - echo "user=$PLUGIN_USERNAME"
-    - git fetch --tags
-    - export VERSION="$(git describe --tags --always)"
-    - export VERSION="${VERSION%-*-*}"
-    - export RELEASE="$(jq -r .release < etc/ncp.cfg)"
-    - export DOCKER_BUILDKIT=1
-    - echo "$REPO"; printenv REPO
-    - echo "${ARCH}"
-    - echo "${DOCKERFILE}"
-    - echo "${RELEASE}"
-    - echo "${QEMU_ARCH}"
-    - dockerd-entrypoint.sh docker build --progress=plain . -f "${DOCKERFILE}" -t "${REPO}:latest" --pull --build_arg arch="${ARCH}" --build_arg arch_qemu="${QEMU_ARCH}" --build_arg release="${RELEASE}"
+    - |
+      bash -c <<-EOF
+        echo "${REPO}"
+        apk add git jq
+        echo "user=$PLUGIN_USERNAME"
+        git fetch --tags
+        export VERSION="$(git describe --tags --always)"
+        export VERSION="${VERSION%-*-*}"
+        export RELEASE="$(jq -r .release < etc/ncp.cfg)"
+        export DOCKER_BUILDKIT=1
+        echo "$REPO"; printenv REPO
+        echo "${ARCH}"
+        echo "${DOCKERFILE}"
+        echo "${RELEASE}"
+        echo "${QEMU_ARCH}"
+        dockerd-entrypoint.sh docker build --progress=plain . -f "$DOCKERFILE" -t "$REPO:latest" --pull --build_arg arch="$ARCH" --build_arg arch_qemu="$QEMU_ARCH" --build_arg release="$RELEASE"
+      EOF
     #  - '[[ -z "$VERSION" ]] || docker tag "${REPO}:latest" "${REPO}:${VERSION}"'
     #  - docker tag "${REPO}:latest" "${REPO}:donotuse"
 
