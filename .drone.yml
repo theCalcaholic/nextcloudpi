@@ -9,7 +9,7 @@ name: default
     - env
     - apk add git jq bash
     - |
-      bash -c <<-EOF
+      bash <<-EOF
         echo "${REPO}"
         echo "user=$PLUGIN_USERNAME"
         git fetch --tags
