@@ -15,7 +15,7 @@ name: default
     - export VERSION="${VERSION%-*-*}"
     - export RELEASE="$(jq -r .release < etc/ncp.cfg)"
     - export DOCKER_BUILDKIT=1
-    - echo "${REPO}"; printenv REPO
+    - echo "$REPO"; printenv REPO
     - echo "${ARCH}"
     - echo "${DOCKERFILE}"
     - echo "${RELEASE}"
